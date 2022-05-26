@@ -201,7 +201,7 @@ export default function SignIn() {
                                 cursor: 'pointer'
                             }}
                         >
-                            Don't have an account? Sign Up!
+                            Don&apos;t have an account? Sign Up!
                         </Typography>
                     </Link>
                 </Box>
