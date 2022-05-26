@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Button from '@mui/material';
+import { Button } from '@mui/material';
 import Well from './Well';
 
 export function CreateRoomButton({
@@ -39,8 +39,8 @@ export function CreateRoomButton({
       {isError && (
         <Well variant="error">Error creating the room. Please try again.</Well>
       )}
-      <Button onClick={createRoom} disabled={isValidRoom}>
-        Create room and start
+      <Button onClick={createRoom} disabled={isValidRoom} style={{ backgroundColor: 'green', color: 'white', borderRadius: '15px', height: '50px', width: '60%' }}>
+        Enter Meeting
       </Button>
     </>
   );

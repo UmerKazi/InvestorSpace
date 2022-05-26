@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import Header from '../../components/Header';
 import getDemoProps from '../../components/demoProps';
 import Call from '../../components/Call';
 import Home from '../../components/Home';
+import { GetStaticPaths } from 'next/types';
 
 export default function Index({ isConfigured = false }) {
     const [room, setRoom] = useState(null);
@@ -11,12 +11,6 @@ export default function Index({ isConfigured = false }) {
 
     return (
         <div className="index-container">
-            <Header
-                demoTitle={'Daily Prebuilt demo'}
-                repoLink={
-                    'https://github.com/daily-demos/examples/tree/main/prebuilt/basic-embed'
-                }
-            />
             <main>
                 {room ? (
                     <Call
@@ -64,4 +58,12 @@ export async function getStaticProps() {
     return {
         props: defaultProps,
     };
+}
+
+export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
+
+    return {
+        paths: [], //indicates that no page needs be created at build time
+        fallback: 'blocking' //indicates the type of fallback
+    }
 }

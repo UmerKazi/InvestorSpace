@@ -1,8 +1,8 @@
 import React, { useCallback, useRef, useState } from 'react';
-import Button from '@mui/material';
+import { Button, TextField, Box } from '@mui/material';
 import Field from './Field';
-import TextField from '@mui/material';
 import CreateRoomButton from './CreateRoomButton';
+
 export const Home = ({ setRoom, setExpiry, isConfigured }) => {
   const roomRef = useRef(null);
   const [isValidRoom, setIsValidRoom] = useState(false);
@@ -28,33 +28,31 @@ export const Home = ({ setRoom, setExpiry, isConfigured }) => {
   }, [roomRef]);
 
   return (
-    <div>
-      <div>
-        Start demo with a new unique room, or paste in your own room URL
-      </div>
-      <div>
+    <Box
+        style={{
+            position: 'absolute',
+            top: '50%', 
+            right: '50%',
+            transform: 'translate(50%,-50%)',
+            borderRadius: '15px',
+            boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+            backgroundColor: 'white',
+            textAlign: 'center',
+            maxWidth: '1300px',
+            minWidth: '400px',
+            height: '120px'
+
+        }}
+    >
+      <br/>
+      <br/>
         <CreateRoomButton
           isConfigured={isConfigured}
           isValidRoom={isValidRoom}
           setRoom={setRoom}
           setExpiry={setExpiry}
         />
-        <Field label="Or enter room to join">
-          <TextField
-            ref={roomRef}
-            type="text"
-            placeholder="Enter room URL..."
-            pattern="^(https:\/\/)?[\w.-]+(\.(daily\.(co)))+[\/\/]+[\w.-]+$"
-            onChange={checkValidity}
-          />
-        </Field>
-        <div>
-          <Button onClick={joinCall} disabled={!isValidRoom}>
-            Join room
-          </Button>
-        </div>
-      </div>
-    </div>
+    </Box>
   );
 };
 
