@@ -18,7 +18,8 @@ export default function Details() {
     const router = useRouter();
     const [temp, setTemp] = React.useState("");
     const [user, loading, error] = useAuthState(auth);
-    const meetingID = localStorage.getItem('meeting');
+    const [pageLoad, setPageLoad] = React.useState<Boolean>(false);
+    const [meetingID, setMeetingID] = React.useState<String | null>("");
     const [meetingIDPage, setMeetingIDPage] = React.useState<string>('');
     const [userPfp, setUserPfp] = React.useState<Array<string>>([]);
     const [meetingTopicsLoaded, setMeetingTopicsLoaded] = React.useState<boolean>(false);
@@ -93,14 +94,6 @@ export default function Details() {
         setTopicDuration("");
         localStorage.setItem("meetingTopicAdded", "true");
     }
-    function contains(arr: Array<any>, obj: string) {
-        let i = arr.length;
-        while (i--) {
-            if (arr[i].meetingTopicID === obj) {
-                return i;
-            }
-        }
-    }
     const handleDeleteMeeting = () => {
         deleteMeeting(meetingID);
         router.push("/dashboard");
@@ -110,7 +103,13 @@ export default function Details() {
         router.push("/dashboard");
     }
     useEffect(() => {
-        if (user) {
+        if (typeof window !== "undefined" && pageLoad == false) {
+            setMeetingID(localStorage.getItem("meeting"));
+            setPageLoad(true);
+        }
+    }, [pageLoad])
+    useEffect(() => {
+        if (user && pageLoad == true) {
             getMeetingData(meetingID).then(res => {
                 setMeetingName(res[0].meetingName);
                 setOrganizer(res[0].organizer);
@@ -126,9 +125,9 @@ export default function Details() {
                 }
             });
         }
-    }, [user])
+    }, [user, pageLoad])
     useEffect(() => {
-        if (meetingName !== "" && organizer !== "" && organizerName !== "" && meetingTime !== "" && attendees !== ["none"] && valuesLoaded == false) {
+        if (meetingName !== "" && organizer !== "" && organizerName !== "" && meetingTime !== "" && attendees !== ["none"] && valuesLoaded == false && pageLoad == true) {
             if (numberOfTopics !== 0) {
                 getMeetingTopics(meetingID).then((res) => {
                     for (let i = 0; i < numberOfTopics; i++) {
@@ -150,7 +149,7 @@ export default function Details() {
             }
             setValuesLoaded(true);
         }
-    }, [meetingName, organizer, organizerName, meetingTime, attendees, numberOfTopics, valuesLoaded])
+    }, [meetingName, organizer, organizerName, meetingTime, attendees, numberOfTopics, valuesLoaded, pageLoad]);
     return (
         <main>
             {valuesLoaded && (

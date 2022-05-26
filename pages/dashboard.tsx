@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { useEffect } from "react";
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { logout, auth, createMeeting, joinMeeting, getUserMeetings } from "../firebase";
+import { logout, auth, createMeeting, joinMeeting, getUserMeetings, setDisplayName } from "../firebase";
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
