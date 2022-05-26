@@ -21,6 +21,8 @@ const Home: NextPage = () => {
     <main style={{ display: 'flex', justifyContent: 'center' }}>
       <Script crossOrigin='true' src="https://unpkg.com/@daily-co/daily-js" />
       <br />
+      <br />
+      <br />
       <Box
         sx={{
           margin: '0 auto',
@@ -30,7 +32,7 @@ const Home: NextPage = () => {
           maxWidth: '1300px'
         }}
       >
-        <Grid container sx={{ padding: { sm: '10px', md: '50px' } }} spacing={2} >
+        <Grid container sx={{ padding: { sm: '10px', md: '50px' }, marginTop: '10px', marginBottom: '10px' }} spacing={2} >
           <Grid item id="text" md={6} style={{ textAlign: 'center', paddingBottom: '50px' }} order={{ xs: 2, md: 1 }} >
             <Box sx={{ paddingTop: { md: '10vh', sm: '0vh' } }}>
               <Typography
@@ -85,6 +87,8 @@ const Home: NextPage = () => {
           </Grid>
         </Grid >
       </Box >
+      <br />
+      <br />
       <br />
       <br />
     </main >

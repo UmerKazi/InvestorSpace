@@ -2,7 +2,7 @@ import { Box, Button, ListItemButton, ListItemIcon, Modal, TextField, Typography
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, getMeetingData, getUserName, getUserPhoto, removeAttendee, createMeetingTopic, updateMeetingDetails, getMeetingTopics, deleteMeetingTopic, updateMeetingTopic } from "../../firebase";
+import { auth, getMeetingData, getUserName, getUserPhoto, removeAttendee, createMeetingTopic, updateMeetingDetails, getMeetingTopics, deleteMeetingTopic, updateMeetingTopic, deleteMeeting, leaveMeeting } from "../../firebase";
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
@@ -101,6 +101,14 @@ export default function Details() {
             }
         }
     }
+    const handleDeleteMeeting = () => {
+        deleteMeeting(meetingID);
+        router.push("/dashboard");
+    }
+    const handleLeaveMeeting = () => {
+        leaveMeeting(meetingID, user?.uid);
+        router.push("/dashboard");
+    }
     useEffect(() => {
         if (user) {
             getMeetingData(meetingID).then(res => {
@@ -113,7 +121,9 @@ export default function Details() {
                 if (res[0].organizer == user?.uid) {
                     setIsCreator(false);
                 }
-                setNumberOfTopics(res[0].meetingTopics.length);
+                if (res[0].meetingTopics) {
+                    setNumberOfTopics(res[0].meetingTopics.length);
+                }
             });
         }
     }, [user])
@@ -303,7 +313,7 @@ export default function Details() {
                             Meeting Topics
                         </Typography>
                         <br />
-                        {meetingTopics?.slice(0).reverse().map((meeting, index) => (
+                        {meetingTopics?.map((meeting, index) => (
                             <>
                                 {!isCreator && (
                                     <>
@@ -438,6 +448,26 @@ export default function Details() {
                         <br />
                         <br />
                     </List>
+                    {!isCreator && (
+                        <>
+                            <br />
+                            <br />
+                            <Button style={{ color: 'red' }} onClick={handleDeleteMeeting}>Delete Meeting</Button>
+                            <br />
+                            <br />
+                            <br />
+                        </>
+                    )}
+                    {isCreator && (
+                        <>
+                            <br />
+                            <br />
+                            <Button style={{ color: 'red' }} onClick={handleLeaveMeeting}>Leave Meeting</Button>
+                            <br />
+                            <br />
+                            <br />
+                        </>
+                    )}
                 </Box>
             )
             }

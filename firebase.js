@@ -117,6 +117,13 @@ const registerWithEmailAndPassword = async (email, password, firstName, lastName
     }
 };
 
+const storePfp = async (file) => {
+  const user = getAuth().currentUser;
+  const storage = getStorage();
+  const pfpRef = ref(storage, user.uid + '.png');
+  uploadBytes(pfpRef, file);
+}
+
 const sendPasswordReset = async (email) => {
     try {
       await sendPasswordResetEmail(auth, email);
@@ -297,7 +304,39 @@ const removeAttendee = async (meetingID, attendee) => {
   })
 }
 
+const deleteMeeting = async (meetingID) => {
+  const meetingsRef = doc(db, "meetings", meetingID);
+  await deleteDoc(meetingsRef);
+}
 
+const leaveMeeting = async (meetingID, attendee) => {
+  const meetingsRef = doc(db, "meetings", meetingID);
+  await updateDoc(meetingsRef, {
+    "attendees": arrayRemove(attendee)
+  })
+}
+
+const updateUserPfp = async (photoURL) => {
+  const usersRef = doc(db, "users", user.uid);
+  await updateDoc(usersRef, {
+    "photoURL": photoURL
+  })
+}
+
+const updateUserName = async (displayName) => {
+  const user = getAuth().currentUser;
+  const usersRef = doc(db, "users", user.uid);
+  await updateDoc(usersRef, {
+    "displayName": displayName
+  })
+}
+
+const getPfpUrl = async() => {
+  const user = getAuth().currentUser;
+  const storage = getStorage();
+  const lol = await getDownloadURL(ref(storage, user.uid + '.png'));
+  return lol;
+}
 
 export {
     auth,
@@ -307,6 +346,7 @@ export {
     sendPasswordReset,
     logout,
     getAuth,
+    updateUserName,
     onAuthStateChanged,
     getUserData,
     setProfilePicture,
@@ -325,4 +365,9 @@ export {
     getMeetingTopics,
     deleteMeetingTopic,
     updateMeetingTopic,
+    deleteMeeting,
+    leaveMeeting,
+    storePfp,
+    getPfpUrl,
+    updateUserPfp,
 }

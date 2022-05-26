@@ -112,6 +112,8 @@ export default function Dashboard(this: any) {
     }, [user, meetingsLoaded]);
     return (
         <main>
+            <br />
+            <br />
             <Box
                 style={{
                     margin: '0 auto',
@@ -486,6 +488,8 @@ export default function Dashboard(this: any) {
                     </Box>
                 </Box>
             </Modal>
+            <br />
+            <br />
         </main>
     );
 }

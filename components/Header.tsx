@@ -59,45 +59,89 @@ const Header = () => {
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'flex' } }}>
-                        <IconButton
-                            size="large"
-                            aria-label="account of current user"
-                            aria-controls="menu-appbar"
-                            aria-haspopup="true"
-                            onClick={handleOpenNavMenu}
-                            color="inherit"
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                        <Menu
-                            id="menu-appbar"
-                            anchorEl={anchorElNav}
-                            anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'left',
-                            }}
-                            keepMounted
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'left',
-                            }}
-                            open={Boolean(anchorElNav)}
-                            onClose={handleCloseNavMenu}
-                            sx={{
-                                display: { xs: 'block', md: 'block' },
-                            }}
-                        >
-                            <Link href="/dashboard">
-                                <MenuItem onClick={handleCloseNavMenu}>
-                                    <Typography textAlign="center">Join Meeting</Typography>
-                                </MenuItem>
-                            </Link>
-                            <Link href="/dashboard">
-                                <MenuItem onClick={handleCloseNavMenu}>
-                                    <Typography textAlign="center">Create New Meeting</Typography>
-                                </MenuItem>
-                            </Link>
-                        </Menu>
+                        {isLoggedIn && (
+                            <>
+                                <IconButton
+                                    size="large"
+                                    aria-label="account of current user"
+                                    aria-controls="menu-appbar"
+                                    aria-haspopup="true"
+                                    onClick={handleOpenNavMenu}
+                                    color="inherit"
+                                >
+                                    <MenuIcon />
+                                </IconButton>
+                                <Menu
+                                    id="menu-appbar"
+                                    anchorEl={anchorElNav}
+                                    anchorOrigin={{
+                                        vertical: 'bottom',
+                                        horizontal: 'left',
+                                    }}
+                                    keepMounted
+                                    transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'left',
+                                    }}
+                                    open={Boolean(anchorElNav)}
+                                    onClose={handleCloseNavMenu}
+                                    sx={{
+                                        display: { xs: 'block', md: 'block' },
+                                    }}
+                                >
+                                    <Link href="/dashboard">
+                                        <MenuItem onClick={handleCloseNavMenu}>
+                                            <Typography textAlign="center">Join Meeting</Typography>
+                                        </MenuItem>
+                                    </Link>
+                                    <Link href="/dashboard">
+                                        <MenuItem onClick={handleCloseNavMenu}>
+                                            <Typography textAlign="center">Create New Meeting</Typography>
+                                        </MenuItem>
+                                    </Link>
+                                </Menu>
+                            </>
+                        )}
+                        {!isLoggedIn && (
+                            <>
+                                <IconButton
+                                    size="large"
+                                    aria-label="account of current user"
+                                    aria-controls="menu-appbar"
+                                    aria-haspopup="true"
+                                    onClick={handleOpenNavMenu}
+                                    sx={{ color: 'black' }}
+                                >
+                                    <MenuIcon />
+                                </IconButton>
+                                <Menu
+                                    id="menu-appbar"
+                                    anchorEl={anchorElNav}
+                                    anchorOrigin={{
+                                        vertical: 'bottom',
+                                        horizontal: 'left',
+                                    }}
+                                    keepMounted
+                                    transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'left',
+                                    }}
+                                    open={Boolean(anchorElNav)}
+                                    onClose={handleCloseNavMenu}
+                                    sx={{
+                                        display: { xs: 'block', md: 'block' },
+                                        color: 'black',
+                                    }}
+                                >
+                                    <Link href="/dashboard">
+                                        <MenuItem onClick={handleCloseNavMenu}>
+                                            <Typography textAlign="center"></Typography>
+                                        </MenuItem>
+                                    </Link>
+                                </Menu>
+                            </>
+                        )}
+
                     </Box>
                     <Link href="/">
                         <Typography
@@ -140,9 +184,6 @@ const Header = () => {
                                 open={Boolean(anchorElUser)}
                                 onClose={handleCloseUserMenu}
                             >
-                                <MenuItem onClick={handleCloseUserMenu}>
-                                    <Typography textAlign="center">Settings</Typography>
-                                </MenuItem>
                                 <MenuItem onClick={logOut}>
                                     <Typography textAlign="center">Log Out</Typography>
                                 </MenuItem>
