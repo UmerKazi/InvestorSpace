@@ -12,22 +12,20 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import Link from 'next/link';
-import { getAuth, onAuthStateChanged, logout } from '../firebase';
+import { getAuth, onAuthStateChanged, logout, getUserPhoto } from '../firebase';
 import { useRouter } from 'next/router';
-
-const pages = ['Dashboard', 'Pricing', 'Blog'];
 
 const Header = () => {
     const router = useRouter();
     const [isLoggedIn, setIsLoggedIn] = React.useState(false);
-    const [userPfp, setUserPfp] = React.useState('https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg');
+    const [userPfp, setUserPfp] = React.useState('');
     React.useEffect(() => {
         const auth = getAuth();
         const user = auth.currentUser;
         onAuthStateChanged(auth, (user) => {
             setIsLoggedIn(!!user);
-            if (user && user.photoURL !== null) {
-                setUserPfp(user.photoURL);
+            if (user && userPfp == '') {
+                getUserPhoto(user?.uid).then((res) => setUserPfp(res[0]));
             }
         });
     }, []);
@@ -89,11 +87,16 @@ const Header = () => {
                                 display: { xs: 'block', md: 'block' },
                             }}
                         >
-                            {pages.map((page) => (
-                                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                                    <Typography textAlign="center">{page}</Typography>
+                            <Link href="/dashboard">
+                                <MenuItem onClick={handleCloseNavMenu}>
+                                    <Typography textAlign="center">Join Meeting</Typography>
                                 </MenuItem>
-                            ))}
+                            </Link>
+                            <Link href="/dashboard">
+                                <MenuItem onClick={handleCloseNavMenu}>
+                                    <Typography textAlign="center">Create New Meeting</Typography>
+                                </MenuItem>
+                            </Link>
                         </Menu>
                     </Box>
                     <Link href="/">

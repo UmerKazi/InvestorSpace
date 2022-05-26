@@ -26,6 +26,9 @@ import {
     doc,
     updateDoc,
     arrayUnion,
+    deleteDoc,
+    FieldValue,
+    arrayRemove,
 } from "firebase/firestore";
 import {
   getStorage,
@@ -59,6 +62,7 @@ const signUpWithGoogle = async () => {
       uid: user.uid,
       displayName: user.displayName,
       email: user.email,
+      photoURL: user.photoURL,
     })
     await updateProfile(user, {
       'displayName': user.displayName
@@ -103,6 +107,7 @@ const registerWithEmailAndPassword = async (email, password, firstName, lastName
         firstName,
         lastName,
         email,
+        photoURL: 'https://i.pinimg.com/474x/f1/da/a7/f1daa70c9e3343cebd66ac2342d5be3f.jpg',
       })
       await updateProfile(user, {
         'displayName': firstName
@@ -218,16 +223,81 @@ const getUserName = async (uid) => {
   return displayName;
 }
 
-const createMeetingTopic = async (meetingID, meetingTopicName, meetingTopicDescription, meetingTopicTimeEstimate, meetingTopicAttachements) => {
-  
+const getUserPhoto = async (uid) => {
+  const q1 = query(collection(db, "users"), where("uid", "==", uid));
+  const querySnapshot = await getDocs(q1);
+  let photo = [];
+  querySnapshot.forEach((doc) => {
+    photo.push(doc.data().photoURL);
+  })
+  return photo;
 }
 
-// const removeAttendee = async (meetingID, attendee) => {
-//   const meetingRef = doc(db, "meetings", meetingID);
-//   await updateDoc(meetingRef, {
-//     "attendees": FirebaseFirestore.FieldValue.arrayRemove({"attendees": attendee});
-//   })
-// }
+const createMeetingTopic = async (meetingID, meetingTopicName, meetingTopicDescription, meetingTopicTimeEstimate) => {
+  const user = getAuth().currentUser;
+  const meetingTopicID = '_' + Math.random().toString(36).substr(2, 9);
+  const meetingsRef = doc(db, "meetings", meetingID);
+  try {
+    await setDoc(doc(db, "meetingTopics", meetingTopicID), {
+      meetingID: meetingID,
+      meetingTopicID: meetingTopicID,
+      name: meetingTopicName,
+      description: meetingTopicDescription,
+      duration: meetingTopicTimeEstimate,
+      attachments: [],
+    })
+    await updateDoc(meetingsRef, {
+        meetingTopics: arrayUnion(meetingTopicID)
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+const getMeetingTopics = async (meetingID) => {
+  const q1 = query(collection(db, "meetingTopics"), where("meetingID", "==", meetingID));
+  const querySnapshot = await getDocs(q1);
+  let meetingTopics = [];
+  querySnapshot.forEach((doc) => {
+    meetingTopics.push(doc.data());
+  })
+  return meetingTopics;
+}
+
+const updateMeetingDetails = async (meetingID, meetingName, meetingTime) => {
+  const meetingsRef = doc(db, "meetings", meetingID);
+  await updateDoc(meetingsRef, {
+      meetingName: meetingName,
+      time: meetingTime,
+  });
+}
+
+const deleteMeetingTopic = async (meetingID, meetingTopicID) => {
+  const meetingsRef = doc(db, "meetings", meetingID);
+  const meetingTopicsRef = doc(db, "meetingTopics", meetingTopicID);
+  await deleteDoc(meetingTopicsRef);
+  await updateDoc(meetingsRef, {
+    "meetingTopics": arrayRemove(meetingTopicID)
+  })
+}
+
+const updateMeetingTopic = async (meetingTopicID, topicName, description, duration) => {
+  const meetingsRef = doc(db, "meetingTopics", meetingTopicID);
+  await updateDoc(meetingsRef, {
+      name: topicName,
+      description: description,
+      duration: duration,
+  });
+}
+
+const removeAttendee = async (meetingID, attendee) => {
+  const meetingRef = doc(db, "meetings", meetingID);
+  await updateDoc(meetingRef, {
+    "attendees": arrayRemove(attendee)
+  })
+}
+
+
 
 export {
     auth,
@@ -248,4 +318,11 @@ export {
     getUserMeetings,
     getMeetingData,
     getUserName,
+    removeAttendee,
+    getUserPhoto,
+    createMeetingTopic,
+    updateMeetingDetails,
+    getMeetingTopics,
+    deleteMeetingTopic,
+    updateMeetingTopic,
 }

@@ -80,16 +80,20 @@ export default function Dashboard(this: any) {
                             </Button>
                         </Link>,
                     join:
-                        <Button
-                            variant="contained"
-                            sx={{
-                                backgroundColor: 'green',
-                                '&:hover': {
-                                    backgroundColor: 'darkgreen'
-                                }
-                            }}>
-                            Join
-                        </Button>,
+                        <Link href={'/join/' + item.meetingID}>
+                            <Button
+                                variant="contained"
+                                sx={{
+                                    backgroundColor: 'green',
+                                    '&:hover': {
+                                        backgroundColor: 'darkgreen'
+                                    }
+                                }}
+                                onClick={() => storeMeetingID(item.meetingID)}
+                            >
+                                Join
+                            </Button>
+                        </Link>,
                 }
             }));
         })
@@ -98,6 +102,10 @@ export default function Dashboard(this: any) {
     useEffect(() => {
         if (!user) router.push("/", undefined, { shallow: true });
         if (user && !meetingsLoaded) {
+            if (localStorage.getItem("meetingTopicAdded") == "true") {
+                router.push("/details/" + localStorage.getItem("meeting"));
+                localStorage.setItem("meetingTopicAdded", "false");
+            }
             getMeetings();
             setMeetingsLoaded(true);
         }
@@ -324,7 +332,7 @@ export default function Dashboard(this: any) {
                                 '&:hover': {
                                     backgroundColor: 'black'
                                 },
-                                borderRadius: '200px'
+                                borderRadius: '15px'
                             }}
                             onClick={handleCreateNewMeeting}
                         >
@@ -395,7 +403,7 @@ export default function Dashboard(this: any) {
                                 '&:hover': {
                                     backgroundColor: 'black'
                                 },
-                                borderRadius: '200px'
+                                borderRadius: '15px'
                             }}
                             onClick={handleJoinMeeting}
                         >

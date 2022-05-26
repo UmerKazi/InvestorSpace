@@ -9,6 +9,7 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth } from '../firebase'
+import Script from 'next/script'
 
 const Home: NextPage = () => {
   const router = useRouter();
@@ -18,6 +19,7 @@ const Home: NextPage = () => {
   }, [user]);
   return (
     <main style={{ display: 'flex', justifyContent: 'center' }}>
+      <Script crossOrigin='true' src="https://unpkg.com/@daily-co/daily-js" />
       <br />
       <Box
         sx={{
