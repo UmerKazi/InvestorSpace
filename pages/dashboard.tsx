@@ -382,7 +382,7 @@ export default function Dashboard(this: any) {
                         component="form"
                         noValidate
                         autoComplete="off"
-                        onSubmit={e => { e.preventDefault(); }}
+                        onSubmit={(e: { preventDefault: () => void; }) => { e.preventDefault(); }}
                         style={{
                             margin: '0 auto'
                         }}
