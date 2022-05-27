@@ -1,7 +1,7 @@
 # InvestorSpace
 Code challenge for Surfboard (AKA Daommo) - InvestorSpace is the future platform for investor meetings!
 
-#Setting Up
+# Setting Up
 Begin by cloning this repo to your local machine. Then run the following command to install all dependencies:
 ```
 yarn install
