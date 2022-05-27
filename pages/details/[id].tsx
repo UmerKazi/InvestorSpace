@@ -70,14 +70,24 @@ export default function Details() {
     }
     const handleUpdateMeetingDetails = () => {
         updateMeetingDetails(meetingID, meetingName, meetingTime);
-    }
-    const handleCreateNewMeetingTopic = () => {
-        createMeetingTopic(meetingID, topicName, topicDescription, topicDuration);
-        setTopicName("");
-        setTopicDescription("");
-        setTopicDuration("");
-        handleCloseCreateMeetingTopic();
         localStorage.setItem("meetingTopicAdded", "true");
+        router.push("/dashboard");
+    }
+    const [createMeetingError, setCreateMeetingError] = React.useState<string>("");
+    const handleCreateNewMeetingTopic = () => {
+        if (topicName == "" || topicDescription == "" || topicDuration == "") {
+            setCreateMeetingError("Please Fill Out All Form Fields");
+            localStorage.setItem("meetingTopicAdded", "true");
+        }
+        if (topicName !== "" && topicDescription !== "" && topicDuration !== "") {
+            createMeetingTopic(meetingID, topicName, topicDescription, topicDuration);
+            setTopicName("");
+            setTopicDescription("");
+            setTopicDuration("");
+            handleCloseCreateMeetingTopic();
+            localStorage.setItem("meetingTopicAdded", "true");
+        }
+
     }
     const handleDeleteMeetingTopic = (meetingTopicID: string) => {
         deleteMeetingTopic(meetingID, meetingTopicID);
@@ -513,6 +523,7 @@ export default function Details() {
                             label="Topic Name"
                             variant="outlined"
                             color="success"
+                            required
                             type={topicName}
                             value={topicName}
                             onChange={handleChangeTopicName}
@@ -526,6 +537,7 @@ export default function Details() {
                             variant="outlined"
                             color="success"
                             multiline
+                            required
                             rows={4}
                             type={topicDescription}
                             value={topicDescription}
@@ -539,6 +551,7 @@ export default function Details() {
                             label="Duration"
                             variant="outlined"
                             color="success"
+                            required
                             type={topicDuration}
                             value={topicDuration}
                             onChange={handleChangeTopicDuration}
@@ -546,6 +559,13 @@ export default function Details() {
                         />
                         <br />
                         <br />
+                        {createMeetingError !== "" && (
+                            <Typography style={{ color: 'red', fontFamily: 'futura' }}>
+                                {createMeetingError}
+                                <br />
+                                <br />
+                            </Typography>
+                        )}
                         <Link href="/dashboard">
                             <Button
                                 variant="contained"

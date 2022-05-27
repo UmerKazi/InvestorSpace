@@ -26,10 +26,10 @@ export default function Dashboard(this: any) {
     const handleCloseCreateMeeting = () => setOpenCreateMeeting(false);
     const [openJoinMeeting, setOpenJoinMeeting] = React.useState(false);
     const handleOpenJoinMeeting = () => setOpenJoinMeeting(true);
-    const handleCloseJoinMeeting = () => setOpenJoinMeeting(false);
-    const [openEditMeeting, setOpenEditMeeting] = React.useState(false);
-    const handleOpenEditMeeting = () => setOpenEditMeeting(true);
-    const handleCloseEditMeeting = () => setOpenEditMeeting(false);
+    const handleCloseJoinMeeting = () => {
+        setOpenJoinMeeting(false);
+        setFormValues({ ...formValues, meetingID: "" });
+    }
     const [formValues, setFormValues] = React.useState({
         meetingName: "",
         meetingID: "",
@@ -49,6 +49,7 @@ export default function Dashboard(this: any) {
         joinMeeting(formValues.meetingID, user?.uid);
         setFormValues({ ...formValues, meetingID: "" });
         handleCloseJoinMeeting();
+        localStorage.setItem("meetingTopicAdded", "true");
         setMeetingsLoaded(false);
     }
 
@@ -99,6 +100,7 @@ export default function Dashboard(this: any) {
         })
 
     }
+
     useEffect(() => {
         if (!user) router.push("/", undefined, { shallow: true });
         if (user && !meetingsLoaded) {
@@ -347,10 +349,10 @@ export default function Dashboard(this: any) {
                 </Box>
             </Modal>
             <Modal
-                open={openEditMeeting}
-                onClose={handleCloseEditMeeting}
-                aria-labelledby="edit-meeting"
-                aria-describedby="edit-meeting-desc"
+                open={openJoinMeeting}
+                onClose={handleCloseJoinMeeting}
+                aria-labelledby="join-meeting"
+                aria-describedby="join-meeting-desc"
             >
                 <Box
                     style={{
@@ -380,6 +382,7 @@ export default function Dashboard(this: any) {
                         component="form"
                         noValidate
                         autoComplete="off"
+                        onSubmit={e => { e.preventDefault(); }}
                         style={{
                             margin: '0 auto'
                         }}
@@ -406,77 +409,6 @@ export default function Dashboard(this: any) {
                                     backgroundColor: 'black'
                                 },
                                 borderRadius: '15px'
-                            }}
-                            onClick={handleJoinMeeting}
-                        >
-                            Continue
-                        </Button>
-                        <br />
-                        <br />
-                        <br />
-                    </Box>
-                </Box>
-            </Modal>
-            <Modal
-                open={openJoinMeeting}
-                onClose={handleCloseJoinMeeting}
-                aria-labelledby="create-new-meeting"
-                aria-describedby="create-new-meeting-desc"
-            >
-                <Box
-                    style={{
-                        backgroundColor: 'white',
-                        position: 'absolute' as 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        textAlign: 'center',
-                        borderRadius: '15px'
-                    }}
-                    sx={{
-                        width: { xs: '390px', sm: "600px" }
-                    }}
-                >
-                    <Typography
-                        variant="h4"
-                        style={{
-                            fontFamily: 'futura',
-                            paddingTop: '30px',
-                            paddingBottom: '30px'
-                        }}
-                    >
-                        Join Meeting
-                    </Typography>
-                    <Box
-                        component="form"
-                        noValidate
-                        autoComplete="off"
-                        style={{
-                            margin: '0 auto'
-                        }}
-                    >
-                        <TextField
-                            id="meetingID"
-                            label="Meeting ID"
-                            variant="outlined"
-                            color="success"
-                            type={formValues.meetingID}
-                            value={formValues.meetingID}
-                            onChange={handleChange('meetingID')}
-                            style={{ width: '80%' }}
-                        />
-                        <br />
-                        <br />
-                        <Button
-                            variant="contained"
-                            sx={{
-                                width: '80%',
-                                height: '50px',
-                                backgroundColor: 'green',
-                                '&:hover': {
-                                    backgroundColor: 'black'
-                                },
-                                borderRadius: '200px'
                             }}
                             onClick={handleJoinMeeting}
                         >
