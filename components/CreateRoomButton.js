@@ -24,7 +24,7 @@ export function CreateRoomButton({
       const resJson = await res.json();
       setExpiry(resJson.config?.exp);
       setRoom(resJson.url);
-    } catch (e) {
+        } catch (e) {
       setIsError(true);
     }
   };

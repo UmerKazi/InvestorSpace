@@ -17,8 +17,6 @@
             enable_network_ui: true,
             enable_screenshare: true,
             enable_chat: true,
-            exp: Math.round(Date.now() / 1000) + 300,
-            eject_at_room_exp: true,
           },
         }),
       };
